@@ -1,64 +1,32 @@
+#include <ctype.h>
 #include <limits.h>
 #include <stdio.h>
 #include "matrixfunc.h"
 
 #define max_razmer 100
 
-static int chitat(int *chislo)
+int chitat(int *chislo)
 {
-    char ch;
-    int rez = scanf(" %c", &ch);
+    long long vvod;
+    int rez = scanf("%18lld", &vvod);
     if (rez == EOF)
         return EOF;
 
-    int minus = ch == '-';
-    int znak = ch == '-' || ch == '+';
-    int tek = ch;
-    if (znak)
-        tek = getchar();
-
-    long long lim = INT_MAX;
-    if (minus)
-        lim = -(long long)INT_MIN;
-
-    long long num = 0;
-    int est_cifra = 0;
-    int err = 0;
-
-    while (tek != EOF && tek != ' ' && tek != '\t' && tek != '\n' &&
-           tek != '\r' && tek != '\v' && tek != '\f')
+    int simvol = getchar();
+    if (rez == 1 && vvod >= INT_MIN && vvod <= INT_MAX &&
+        (simvol == EOF || isspace(simvol)))
     {
-        if (tek < '0' || tek > '9')
-            err = 1;
-        else if (!err)
-        {
-            int cifra = tek - '0';
-
-            if (num > (lim - cifra) / 10)
-                err = 1;
-            else
-                num = num * 10 + cifra;
-
-            est_cifra = 1;
-        }
-        tek = getchar();
+        *chislo = (int)vvod;
+        return 1;
     }
 
-    if (err || !est_cifra)
-    {
-        while (tek != EOF && tek != '\n')
-            tek = getchar();
-        return 0;
-    }
+    while (simvol != EOF && simvol != '\n')
+        simvol = getchar();
 
-    if (minus)
-        num = -num;
-
-    *chislo = (int)num;
-    return 1;
+    return 0;
 }
 
-static int zadat(size_t *rows, size_t *cols)
+int zadat(size_t *rows, size_t *cols)
 {
     int str, stolb;
 
@@ -79,7 +47,7 @@ static int zadat(size_t *rows, size_t *cols)
     return 1;
 }
 
-static int zapolnit(int *mat, size_t rows, size_t cols)
+int zapolnit(int *mat, size_t rows, size_t cols)
 {
     for (size_t i = 0; i < rows; i++)
     {
@@ -95,7 +63,7 @@ static int zapolnit(int *mat, size_t rows, size_t cols)
     return 1;
 }
 
-static void pokazat(const int *mat, size_t rows, size_t cols)
+void pokazat(const int *mat, size_t rows, size_t cols)
 {
     for (size_t i = 0; i < rows; i++)
     {
